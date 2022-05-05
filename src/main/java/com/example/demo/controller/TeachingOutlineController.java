@@ -31,4 +31,10 @@ public class TeachingOutlineController {
 
         return teachingOutlineService.uploadTeachingOutline(teachingOutlineVo);
     }
+
+    @PostMapping("/update")
+    public Result updateTeachingOutline(@RequestBody TeachingOutlineVo teachingOutlineVo) throws ParseException {
+
+        return teachingOutlineService.upldateTeachingOutline(teachingOutlineVo);
+    }
 }

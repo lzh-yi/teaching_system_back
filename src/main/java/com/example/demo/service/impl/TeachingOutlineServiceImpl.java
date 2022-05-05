@@ -58,6 +58,20 @@ public class TeachingOutlineServiceImpl implements TeachingOutlineService {
         }
     }
 
+    @Override
+    public Result upldateTeachingOutline(TeachingOutlineVo teachingOutlineVo) throws ParseException {
+        TeachingOutline teachingOutline = new TeachingOutline();
+        BeanUtils.copyProperties(teachingOutlineVo, teachingOutline);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        teachingOutline.setUploadingTime(formatter.parse(teachingOutlineVo.getUploadingTime()));
+        int count = teachingOutlineMapper.updateById(teachingOutline);
+        if (count  == 1) {
+            return Result.success(null, null);
+        } else {
+            return Result.fail(300, "更新大纲失败");
+        }
+    }
+
     private List<TeachingOutlineVo> copyList(List<TeachingOutline> list) {
         return null;
     }

@@ -3,7 +3,7 @@ package com.example.demo.vo;
 import lombok.Data;
 
 @Data
-public class TeachingOutlineVo {
+public class TeachingScheduleVo {
     private int id;
     private String title;
     private String version;

@@ -21,4 +21,11 @@ public interface TeachingOutlineService {
      * @return
      */
     Result uploadTeachingOutline(TeachingOutlineVo teachingOutlineVo) throws ParseException;
+
+    /**
+     * 更新教学大纲
+     * @param teachingOutlineVo
+     * @return
+     */
+    Result upldateTeachingOutline(TeachingOutlineVo teachingOutlineVo) throws ParseException;
 }
