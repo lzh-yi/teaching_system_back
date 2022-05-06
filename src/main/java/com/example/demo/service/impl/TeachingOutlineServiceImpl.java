@@ -20,60 +20,60 @@ import java.util.List;
 @Service
 public class TeachingOutlineServiceImpl implements TeachingOutlineService {
 
-    @Autowired
-    private TeachingOutlineMapper teachingOutlineMapper;
+  @Autowired
+  private TeachingOutlineMapper teachingOutlineMapper;
 
-    @Override
-    public Result teachingOutlineList(TeachingOutlineParams teachingOutlineParams) {
-        // 获取分页对象
-        PageParams pageParams = new PageParams(teachingOutlineParams.getPage(), teachingOutlineParams.getPageSize());
-        Page<TeachingOutline> page = new Page<>(pageParams.getPage(),pageParams.getPageSize());
-        LambdaQueryWrapper<TeachingOutline> queryWrapper = new LambdaQueryWrapper<>();
-        // 获取查询参数
-        if (teachingOutlineParams.getTitle() != "") {
-            queryWrapper.eq(TeachingOutline::getTitle, teachingOutlineParams.getTitle());
-        }
-        if (teachingOutlineParams.getId() != -1) {
-            queryWrapper.eq(TeachingOutline::getId, teachingOutlineParams.getId());
-        }
-        queryWrapper.orderByDesc(TeachingOutline::getId);
-        Page<TeachingOutline> teachingOutlinePage = teachingOutlineMapper.selectPage(page,queryWrapper);
-        List<TeachingOutline> list = teachingOutlinePage.getRecords();
-
-        return Result.success(list, teachingOutlinePage.getTotal());
+  @Override
+  public Result teachingOutlineList(TeachingOutlineParams teachingOutlineParams) {
+    // 获取分页对象
+    PageParams pageParams = new PageParams(teachingOutlineParams.getPage(), teachingOutlineParams.getPageSize());
+    Page<TeachingOutline> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
+    LambdaQueryWrapper<TeachingOutline> queryWrapper = new LambdaQueryWrapper<>();
+    // 获取查询参数
+    if (teachingOutlineParams.getTitle() != "") {
+      queryWrapper.eq(TeachingOutline::getTitle, teachingOutlineParams.getTitle());
     }
-
-    @Override
-    public Result uploadTeachingOutline(TeachingOutlineVo teachingOutlineVo) throws ParseException {
-
-        TeachingOutline teachingOutline = new TeachingOutline();
-        BeanUtils.copyProperties(teachingOutlineVo, teachingOutline);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        teachingOutline.setUploadingTime(formatter.parse(teachingOutlineVo.getUploadingTime()));
-        int count = teachingOutlineMapper.insert(teachingOutline);
-        if (count  == 1) {
-            return Result.success(null, null);
-        } else {
-            return Result.fail(300, "插入大纲失败");
-        }
+    if (teachingOutlineParams.getId() != -1) {
+      queryWrapper.eq(TeachingOutline::getId, teachingOutlineParams.getId());
     }
+    queryWrapper.orderByDesc(TeachingOutline::getId);
+    Page<TeachingOutline> teachingOutlinePage = teachingOutlineMapper.selectPage(page, queryWrapper);
+    List<TeachingOutline> list = teachingOutlinePage.getRecords();
 
-    @Override
-    public Result upldateTeachingOutline(TeachingOutlineVo teachingOutlineVo) throws ParseException {
-        TeachingOutline teachingOutline = new TeachingOutline();
-        BeanUtils.copyProperties(teachingOutlineVo, teachingOutline);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        teachingOutline.setUploadingTime(formatter.parse(teachingOutlineVo.getUploadingTime()));
-        int count = teachingOutlineMapper.updateById(teachingOutline);
-        if (count  == 1) {
-            return Result.success(null, null);
-        } else {
-            return Result.fail(300, "更新大纲失败");
-        }
-    }
+    return Result.success(list, teachingOutlinePage.getTotal());
+  }
 
-    private List<TeachingOutlineVo> copyList(List<TeachingOutline> list) {
-        return null;
+  @Override
+  public Result uploadTeachingOutline(TeachingOutlineVo teachingOutlineVo) throws ParseException {
+
+    TeachingOutline teachingOutline = new TeachingOutline();
+    BeanUtils.copyProperties(teachingOutlineVo, teachingOutline);
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    teachingOutline.setUploadingTime(formatter.parse(teachingOutlineVo.getUploadingTime()));
+    int count = teachingOutlineMapper.insert(teachingOutline);
+    if (count == 1) {
+      return Result.success(null, null);
+    } else {
+      return Result.fail(300, "插入大纲失败");
     }
+  }
+
+  @Override
+  public Result upldateTeachingOutline(TeachingOutlineVo teachingOutlineVo) throws ParseException {
+    TeachingOutline teachingOutline = new TeachingOutline();
+    BeanUtils.copyProperties(teachingOutlineVo, teachingOutline);
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    teachingOutline.setUploadingTime(formatter.parse(teachingOutlineVo.getUploadingTime()));
+    int count = teachingOutlineMapper.updateById(teachingOutline);
+    if (count == 1) {
+      return Result.success(null, null);
+    } else {
+      return Result.fail(300, "更新大纲失败");
+    }
+  }
+
+  private List<TeachingOutlineVo> copyList(List<TeachingOutline> list) {
+    return null;
+  }
 
 }

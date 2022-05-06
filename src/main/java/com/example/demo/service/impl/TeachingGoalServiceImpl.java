@@ -28,8 +28,8 @@ public class TeachingGoalServiceImpl implements TeachingGoalService {
         Page<TeachingGoal> page = new Page<>(pageParams.getPage(),pageParams.getPageSize());
         LambdaQueryWrapper<TeachingGoal> queryWrapper = new LambdaQueryWrapper<>();
         // 获取查询参数
-        if (teachingGoalParams.getTeachingGoalId() != -1) {
-            queryWrapper.eq(TeachingGoal::getTeachingOutlineId, teachingGoalParams.getTeachingGoalId());
+        if (teachingGoalParams.getTeachingOutlineId() != -1) {
+            queryWrapper.eq(TeachingGoal::getTeachingOutlineId, teachingGoalParams.getTeachingOutlineId());
         }
         if (teachingGoalParams.getId() != -1) {
             queryWrapper.eq(TeachingGoal::getId, teachingGoalParams.getId());

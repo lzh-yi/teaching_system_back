@@ -7,8 +7,8 @@ import lombok.Data;
  */
 @Data
 public class TeachingOutlineParams {
-    private int page = 1;
-    private int pageSize = 10;
-    private String title = "";
-    private int id;
+  private int page = 1;
+  private int pageSize = 10;
+  private String title = "";
+  private int id;
 }
