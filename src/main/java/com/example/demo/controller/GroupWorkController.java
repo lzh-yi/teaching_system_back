@@ -4,6 +4,7 @@ import com.example.demo.service.GroupWorkService;
 import com.example.demo.vo.GroupWorkVo;
 import com.example.demo.vo.Result;
 import com.example.demo.vo.param.GroupWorkParams;
+import com.example.demo.vo.param.KnowledgeAndOutlineParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,4 +37,11 @@ public class GroupWorkController {
 
     return groupWorkService.updateGroupWork(groupWorkVo);
   }
+
+  @PostMapping("/select_data")
+  public Result knowledgePointSelectData(@RequestBody KnowledgeAndOutlineParams knowledgeAndOutlineParams) {
+
+    return groupWorkService.knowledgePointSelectData(knowledgeAndOutlineParams);
+  }
+
 }

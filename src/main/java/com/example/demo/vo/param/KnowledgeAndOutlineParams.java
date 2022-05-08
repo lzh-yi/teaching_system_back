@@ -8,9 +8,8 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class KnowledgePointParams {
-  private int id = -1;
+public class KnowledgeAndOutlineParams {
   private int page = 1;
   private int pageSize = 1000;
-  private int teachingGoalId = -1;
+  private int teachingOutlineId = -1;
 }
