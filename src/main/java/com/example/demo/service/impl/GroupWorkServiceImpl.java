@@ -3,16 +3,9 @@ package com.example.demo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.dao.mapper.GroupWorkMapper;
-import com.example.demo.dao.pojo.GroupWork;
-import com.example.demo.dao.pojo.KnowledgePoint;
-import com.example.demo.dao.pojo.TeachingGoal;
-import com.example.demo.service.GroupWorkService;
-import com.example.demo.service.KnowledgePointService;
-import com.example.demo.service.TeachingGoalService;
-import com.example.demo.vo.GroupWorkVo;
-import com.example.demo.vo.KnowledgeAndOutlineTree;
-import com.example.demo.vo.Result;
-import com.example.demo.vo.TreeNode;
+import com.example.demo.dao.pojo.*;
+import com.example.demo.service.*;
+import com.example.demo.vo.*;
 import com.example.demo.vo.param.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +25,10 @@ public class GroupWorkServiceImpl implements GroupWorkService {
   private TeachingGoalService teachingGoalService;
   @Autowired
   private KnowledgePointService knowledgePointService;
+  @Autowired
+  private WorkStatisticsService workStatisticsService;
+  @Autowired
+  private UserService userService;
 
   @Override
   public Result addGroupWork(GroupWorkVo groupWorkVo) throws ParseException {
@@ -127,5 +124,47 @@ public class GroupWorkServiceImpl implements GroupWorkService {
 
     return Result.success(knowledgeAndGoalTreeList, null);
 
+  }
+
+  @Override
+  public Result insertCompleteList(InsertCompleteListParams insertCompleteListParams) throws ParseException {
+    // 获取所有的学生
+    UserVo userVo = new UserVo();
+    userVo.setType("student");
+    List<User> userList = (List<User>) userService.userList(userVo).getData();
+    System.out.println(userList);
+
+    for (User user : userList) {
+      WorkStatisticsVo workStatisticsVo = new WorkStatisticsVo();
+      workStatisticsVo.setWorkId(insertCompleteListParams.getWorkId());
+      workStatisticsVo.setCategory("0");
+      workStatisticsVo.setUserId(user.getId());
+      workStatisticsVo.setSubmitStatus(insertCompleteListParams.getSubmitStatus());
+      workStatisticsVo.setCorrectStatus("0");
+      workStatisticsVo.setScore(0);
+      workStatisticsService.insertComplete(workStatisticsVo);
+    }
+    return Result.success(null, null);
+  }
+
+  @Override
+  public Result updateCompleteList(InsertCompleteListParams insertCompleteListParams) throws ParseException {
+    // 获取指定题组下的所
+    WorkStatisticsParams workStatisticsParams = new WorkStatisticsParams();
+    workStatisticsParams.setWorkId(insertCompleteListParams.getWorkId());
+    workStatisticsParams.setCategory("0");
+    workStatisticsParams.setUserId(-1);
+    List<WorkStatistics> workStatisticsList = (List<WorkStatistics>) workStatisticsService.completeList(workStatisticsParams).getData();
+    System.out.println(workStatisticsList);
+    // 更新
+    for (WorkStatistics workStatistics : workStatisticsList) {
+      workStatistics.setSubmitStatus("1");
+      workStatistics.setCorrectStatus("1");
+      WorkStatisticsVo workStatisticsVo = new WorkStatisticsVo();
+      BeanUtils.copyProperties(workStatistics, workStatisticsVo);
+      workStatisticsService.update(workStatisticsVo);
+    }
+
+    return Result.success(null, null);
   }
 }

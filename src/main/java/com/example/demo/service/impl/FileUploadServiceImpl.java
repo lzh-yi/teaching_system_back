@@ -19,7 +19,6 @@ public class FileUploadServiceImpl implements FileUploadService {
         String uuuid = UUID.randomUUID().toString();
 
         String paths = "D:/teaching_platform/upload_file";
-//        String paths = ClassUtils.getDefaultClassLoader().getResource("").getPath();
         File f = new File(paths  + uuuid +fileName );
         file.transferTo(f);
 
@@ -28,6 +27,8 @@ public class FileUploadServiceImpl implements FileUploadService {
         fileUploadVo.setFilePath(paths  + uuuid +fileName);
 
         return Result.success(fileUploadVo, null);
+
+
 
     }
 

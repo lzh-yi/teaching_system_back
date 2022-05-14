@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.vo.GroupWorkVo;
 import com.example.demo.vo.Result;
 import com.example.demo.vo.param.GroupWorkParams;
+import com.example.demo.vo.param.InsertCompleteListParams;
 import com.example.demo.vo.param.KnowledgeAndOutlineParams;
 
 import java.text.ParseException;
@@ -39,5 +40,21 @@ public interface GroupWorkService {
    * @return
    */
   Result knowledgePointSelectData(KnowledgeAndOutlineParams knowledgeAndOutlineParams);
+
+  /**
+   * 插入完成情况
+   *
+   * @param insertCompleteListParams
+   * @return
+   */
+  Result insertCompleteList(InsertCompleteListParams insertCompleteListParams) throws ParseException;
+
+  /**
+   * 更新完成情况
+   *
+   * @param insertCompleteListParams
+   * @return
+   */
+  Result updateCompleteList(InsertCompleteListParams insertCompleteListParams) throws ParseException;
 
 }

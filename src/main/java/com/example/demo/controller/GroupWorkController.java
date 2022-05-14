@@ -4,6 +4,7 @@ import com.example.demo.service.GroupWorkService;
 import com.example.demo.vo.GroupWorkVo;
 import com.example.demo.vo.Result;
 import com.example.demo.vo.param.GroupWorkParams;
+import com.example.demo.vo.param.InsertCompleteListParams;
 import com.example.demo.vo.param.KnowledgeAndOutlineParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +43,18 @@ public class GroupWorkController {
   public Result knowledgePointSelectData(@RequestBody KnowledgeAndOutlineParams knowledgeAndOutlineParams) {
 
     return groupWorkService.knowledgePointSelectData(knowledgeAndOutlineParams);
+  }
+
+  @PostMapping("/insert_complete_list")
+  public Result insertCompleteList(@RequestBody InsertCompleteListParams insertCompleteListParams) throws ParseException {
+
+    return groupWorkService.insertCompleteList(insertCompleteListParams);
+  }
+
+  @PostMapping("/update_complete_list")
+  public Result updateCompleteList(@RequestBody InsertCompleteListParams insertCompleteListParams) throws ParseException {
+
+    return groupWorkService.updateCompleteList(insertCompleteListParams);
   }
 
 }
