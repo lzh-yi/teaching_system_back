@@ -25,12 +25,14 @@ public class WorkStatisticsServiceImpl implements WorkStatisticsService {
 
   @Override
   public Result completeList(WorkStatisticsParams workStatisticsParams) {
-    System.out.println(workStatisticsParams);
     // 获取分页对象
     PageParams pageParams = new PageParams(1, 10000);
     Page<WorkStatistics> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
     LambdaQueryWrapper<WorkStatistics> queryWrapper = new LambdaQueryWrapper<>();
 
+    if (workStatisticsParams.getId() != -1) {
+      queryWrapper.eq(WorkStatistics::getId, workStatisticsParams.getId());
+    }
     if (workStatisticsParams.getCategory() != null) {
       queryWrapper.eq(WorkStatistics::getCategory, workStatisticsParams.getCategory());
     }

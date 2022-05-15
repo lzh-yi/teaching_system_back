@@ -6,9 +6,9 @@ import lombok.Data;
 public class ExerciseCompleteParams {
   private int page = 1;
   private int pageSize = 1000;
-  private int id;
-  private int exerciseId;
-  private int userId;
+  private int id = -1;
+  private int exerciseId = -1;
+  private int userId = -1;
   private String answer;
   private int score;
 }
