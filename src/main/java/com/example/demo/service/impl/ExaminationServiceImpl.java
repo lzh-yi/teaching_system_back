@@ -2,7 +2,7 @@ package com.example.demo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.demo.dao.mapper.GroupWorkMapper;
+import com.example.demo.dao.mapper.ExaminationMapper;
 import com.example.demo.dao.pojo.*;
 import com.example.demo.service.*;
 import com.example.demo.vo.*;
@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class GroupWorkServiceImpl implements GroupWorkService {
+public class ExaminationServiceImpl implements ExaminationService {
   @Autowired
-  private GroupWorkMapper groupWorkMapper;
+  private ExaminationMapper examinationMapper;
   @Autowired
   private TeachingGoalService teachingGoalService;
   @Autowired
@@ -32,22 +32,22 @@ public class GroupWorkServiceImpl implements GroupWorkService {
 
   @Override
   public Result addGroupWork(GroupWorkVo groupWorkVo) throws ParseException {
-    GroupWork groupWork = new GroupWork();
-    BeanUtils.copyProperties(groupWorkVo, groupWork);
+    Examination examination = new Examination();
+    BeanUtils.copyProperties(groupWorkVo, examination);
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     // 设置发布和截止时间
     if (groupWorkVo.getPublishTime() != "" && groupWorkVo.getDeadlineTime() != "") {
-      groupWork.setPublishTime(formatter.parse(groupWorkVo.getPublishTime()));
-      groupWork.setDeadlineTime(formatter.parse(groupWorkVo.getDeadlineTime()));
+      examination.setPublishTime(formatter.parse(groupWorkVo.getPublishTime()));
+      examination.setDeadlineTime(formatter.parse(groupWorkVo.getDeadlineTime()));
     }
     // 设置占比
-    groupWork.setProportion(new BigDecimal(groupWorkVo.getProportion()));
+    examination.setProportion(new BigDecimal(groupWorkVo.getProportion()));
 
-    int count = groupWorkMapper.insert(groupWork);
+    int count = examinationMapper.insert(examination);
     if (count == 1) {
       return Result.success(null, null);
     } else {
-      return Result.fail(300, "插入题组失败");
+      return Result.fail(300, "插入考试失败");
     }
   }
 
@@ -55,41 +55,41 @@ public class GroupWorkServiceImpl implements GroupWorkService {
   public Result groupWorkList(GroupWorkParams groupWorkParams) {
     // 获取分页对象
     PageParams pageParams = new PageParams(groupWorkParams.getPage(), groupWorkParams.getPageSize());
-    Page<GroupWork> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
-    LambdaQueryWrapper<GroupWork> queryWrapper = new LambdaQueryWrapper<>();
+    Page<Examination> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
+    LambdaQueryWrapper<Examination> queryWrapper = new LambdaQueryWrapper<>();
     // 获取查询参数
     if (groupWorkParams.getName() != "") {
-      queryWrapper.eq(GroupWork::getName, groupWorkParams.getName());
+      queryWrapper.eq(Examination::getName, groupWorkParams.getName());
     }
     if (groupWorkParams.getId() != -1) {
-      queryWrapper.eq(GroupWork::getId, groupWorkParams.getId());
+      queryWrapper.eq(Examination::getId, groupWorkParams.getId());
     }
 
-    queryWrapper.orderByDesc(GroupWork::getId);
-    Page<GroupWork> groupWorkPage = groupWorkMapper.selectPage(page, queryWrapper);
-    List<GroupWork> list = groupWorkPage.getRecords();
+    queryWrapper.orderByDesc(Examination::getId);
+    Page<Examination> groupWorkPage = examinationMapper.selectPage(page, queryWrapper);
+    List<Examination> list = groupWorkPage.getRecords();
 
     return Result.success(list, groupWorkPage.getTotal());
   }
 
   @Override
   public Result updateGroupWork(GroupWorkVo groupWorkVo) throws ParseException {
-    GroupWork groupWork = new GroupWork();
-    BeanUtils.copyProperties(groupWorkVo, groupWork);
+    Examination examination = new Examination();
+    BeanUtils.copyProperties(groupWorkVo, examination);
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     // 设置发布和截止时间
     if (groupWorkVo.getPublishTime() != "" && groupWorkVo.getDeadlineTime() != "") {
-      groupWork.setPublishTime(formatter.parse(groupWorkVo.getPublishTime()));
-      groupWork.setDeadlineTime(formatter.parse(groupWorkVo.getDeadlineTime()));
+      examination.setPublishTime(formatter.parse(groupWorkVo.getPublishTime()));
+      examination.setDeadlineTime(formatter.parse(groupWorkVo.getDeadlineTime()));
     }
     // 设置占比
-    groupWork.setProportion(new BigDecimal(groupWorkVo.getProportion()));
-    int count = groupWorkMapper.updateById(groupWork);
+    examination.setProportion(new BigDecimal(groupWorkVo.getProportion()));
+    int count = examinationMapper.updateById(examination);
     System.out.println(count);
     if (count == 1) {
       return Result.success(null, null);
     } else {
-      return Result.fail(300, "更新题组失败");
+      return Result.fail(300, "更新考试失败");
     }
   }
 
@@ -135,7 +135,7 @@ public class GroupWorkServiceImpl implements GroupWorkService {
     for (User user : userList) {
       WorkStatisticsVo workStatisticsVo = new WorkStatisticsVo();
       workStatisticsVo.setWorkId(insertCompleteListParams.getWorkId());
-      workStatisticsVo.setCategory("0");
+      workStatisticsVo.setCategory("1");
       workStatisticsVo.setUserId(user.getId());
       workStatisticsVo.setSubmitStatus(insertCompleteListParams.getSubmitStatus());
       workStatisticsVo.setCorrectStatus("0");
@@ -150,7 +150,7 @@ public class GroupWorkServiceImpl implements GroupWorkService {
     // 获取指定题组下的所
     WorkStatisticsParams workStatisticsParams = new WorkStatisticsParams();
     workStatisticsParams.setWorkId(insertCompleteListParams.getWorkId());
-    workStatisticsParams.setCategory("0");
+    workStatisticsParams.setCategory("1");
     workStatisticsParams.setUserId(-1);
     List<WorkStatistics> workStatisticsList = (List<WorkStatistics>) workStatisticsService.completeList(workStatisticsParams).getData();
     System.out.println(workStatisticsList);
