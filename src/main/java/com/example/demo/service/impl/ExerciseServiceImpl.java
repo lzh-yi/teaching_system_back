@@ -47,6 +47,9 @@ public class ExerciseServiceImpl implements ExerciseService {
     if (exerciseParams.getWorkId() != -1) {
       queryWrapper.eq(Exercise::getWorkId, exerciseParams.getWorkId());
     }
+    if (exerciseParams.getKnowledgePointId() != -1) {
+      queryWrapper.eq(Exercise::getKnowledgePoint, exerciseParams.getKnowledgePointId());
+    }
     queryWrapper.orderByAsc(Exercise::getId);
     Page<Exercise> exercisePage = exerciseMapper.selectPage(page, queryWrapper);
     List<Exercise> list = exercisePage.getRecords();

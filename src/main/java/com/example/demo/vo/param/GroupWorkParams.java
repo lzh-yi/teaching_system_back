@@ -12,4 +12,5 @@ public class GroupWorkParams {
   private int page = 1;
   private int pageSize = 1000;
   private String name = "";
+  private int teachingOutlineId = -1;
 }

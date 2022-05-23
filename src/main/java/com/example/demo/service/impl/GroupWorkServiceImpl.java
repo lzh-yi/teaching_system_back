@@ -64,6 +64,9 @@ public class GroupWorkServiceImpl implements GroupWorkService {
     if (groupWorkParams.getId() != -1) {
       queryWrapper.eq(GroupWork::getId, groupWorkParams.getId());
     }
+    if (groupWorkParams.getTeachingOutlineId() != -1) {
+      queryWrapper.eq(GroupWork::getTeachingOutlineId, groupWorkParams.getTeachingOutlineId());
+    }
 
     queryWrapper.orderByDesc(GroupWork::getId);
     Page<GroupWork> groupWorkPage = groupWorkMapper.selectPage(page, queryWrapper);

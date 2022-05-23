@@ -64,6 +64,9 @@ public class ExaminationServiceImpl implements ExaminationService {
     if (groupWorkParams.getId() != -1) {
       queryWrapper.eq(Examination::getId, groupWorkParams.getId());
     }
+    if (groupWorkParams.getTeachingOutlineId() != -1) {
+      queryWrapper.eq(Examination::getTeachingOutlineId, groupWorkParams.getTeachingOutlineId());
+    }
 
     queryWrapper.orderByDesc(Examination::getId);
     Page<Examination> groupWorkPage = examinationMapper.selectPage(page, queryWrapper);

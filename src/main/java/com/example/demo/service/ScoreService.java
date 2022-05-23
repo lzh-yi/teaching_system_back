@@ -25,5 +25,5 @@ public interface ScoreService {
    *
    * @return
    */
-  Result getFinalScoreList();
+  Result getFinalScoreList(ScoreParams scoreParams);
 }

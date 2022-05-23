@@ -29,8 +29,8 @@ public class ScoreManagementController {
   }
 
   @PostMapping("/final_score")
-  public Result finalScoreList() {
+  public Result finalScoreList(@RequestBody ScoreParams scoreParams) {
 
-    return scoreService.getFinalScoreList();
+    return scoreService.getFinalScoreList(scoreParams);
   }
 }

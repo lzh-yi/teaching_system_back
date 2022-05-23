@@ -14,4 +14,5 @@ public class ExerciseParams {
   private int pageSize = 1000;
   private int workId;
   private String category;
+  private int knowledgePointId = -1;
 }

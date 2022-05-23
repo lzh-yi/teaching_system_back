@@ -46,9 +46,11 @@ public class ScoreServiceImpl implements ScoreService {
     List<Object> workLists = null;
     if (scoreParams.getType().equals("0")) {
       GroupWorkParams groupWorkParams = new GroupWorkParams();
+      groupWorkParams.setTeachingOutlineId(scoreParams.getTeachingOutlineId());
       workLists = (List<Object>) groupWorkService.groupWorkList(groupWorkParams).getData();
     } else if (scoreParams.getType().equals("1")) {
       GroupWorkParams groupWorkParams = new GroupWorkParams();
+      groupWorkParams.setTeachingOutlineId(scoreParams.getTeachingOutlineId());
       workLists = (List<Object>) examinationService.groupWorkList(groupWorkParams).getData();
     }
     List<ScoreDetail> scoreDetailList = new ArrayList<>();
@@ -96,7 +98,8 @@ public class ScoreServiceImpl implements ScoreService {
   }
 
   @Override
-  public Result getFinalScoreList() {
+  public Result getFinalScoreList(ScoreParams scoreParams) {
+    System.out.println(scoreParams.getTeachingOutlineId());
     // 获取所有学生
     UserVo userVo = new UserVo();
     userVo.setType("student");
@@ -104,17 +107,37 @@ public class ScoreServiceImpl implements ScoreService {
     // 获取每个学生的所有习题和考试
     WorkStatisticsParams workStatisticsParams = new WorkStatisticsParams();
     workStatisticsParams.setCategory("0");
-    List<WorkStatistics> workStatisticsList = (List<WorkStatistics>) workStatisticsService.completeList(workStatisticsParams).getData();
+    List<WorkStatistics> workStatisticsListCopy = (List<WorkStatistics>) workStatisticsService.completeList(workStatisticsParams).getData();
     workStatisticsParams.setCategory("1");
-    List<WorkStatistics> examinationStatisticsList = (List<WorkStatistics>) workStatisticsService.completeList(workStatisticsParams).getData();
+    List<WorkStatistics> examinationStatisticsListCopy = (List<WorkStatistics>) workStatisticsService.completeList(workStatisticsParams).getData();
+
+    // 筛选出指定大纲下的完成情况
+    List<WorkStatistics> workStatisticsList = new ArrayList<>();
+    List<WorkStatistics> examinationStatisticsList = new ArrayList<>();
+    GroupWorkParams groupWorkParams = new GroupWorkParams();
+    groupWorkParams.setTeachingOutlineId(scoreParams.getTeachingOutlineId());
+    List<GroupWork> groupWorkList = (List<GroupWork>) groupWorkService.groupWorkList(groupWorkParams).getData();
+    for (GroupWork groupWork : groupWorkList) {
+      for (WorkStatistics workStatistics : workStatisticsListCopy) {
+        if (workStatistics.getWorkId() != groupWork.getId()) continue;
+        workStatisticsList.add(workStatistics);
+      }
+    }
+    for (GroupWork groupWork : groupWorkList) {
+      for (WorkStatistics workStatistics : examinationStatisticsListCopy) {
+        if (workStatistics.getWorkId() != groupWork.getId()) continue;
+        examinationStatisticsList.add(workStatistics);
+      }
+    }
+
     List<FinalScoreDetail> finalScoreDetailList = new ArrayList<>();
     for (User user : userList) {
       FinalScoreDetail finalScoreDetail = new FinalScoreDetail();
       BeanUtils.copyProperties(user, finalScoreDetail);
       // 计算习题成绩
-      finalScoreDetail.setWorkScore(getWorkScore(user.getId(), workStatisticsList));
+      finalScoreDetail.setWorkScore(getWorkScore(user.getId(), workStatisticsList, scoreParams.getTeachingOutlineId()));
       // 计算考试成绩
-      finalScoreDetail.setExaminationScore(getExaminationScore(user.getId(), examinationStatisticsList));
+      finalScoreDetail.setExaminationScore(getExaminationScore(user.getId(), examinationStatisticsList, scoreParams.getTeachingOutlineId()));
       // 计算最终成绩
       finalScoreDetail.setFinalScore(finalScoreDetail.getWorkScore() + finalScoreDetail.getExaminationScore());
       finalScoreDetailList.add(finalScoreDetail);
@@ -164,9 +187,11 @@ public class ScoreServiceImpl implements ScoreService {
     return totalScore;
   }
 
-  private double getWorkScore(int userId, List<WorkStatistics> workStatisticsList) {
+  private double getWorkScore(int userId, List<WorkStatistics> workStatisticsList, int teachingOutlineId) {
     double score = 0;
-    List<GroupWork> groupWorkList = (List<GroupWork>) groupWorkService.groupWorkList(new GroupWorkParams()).getData();
+    GroupWorkParams groupWorkParams = new GroupWorkParams();
+    groupWorkParams.setTeachingOutlineId(teachingOutlineId);
+    List<GroupWork> groupWorkList = (List<GroupWork>) groupWorkService.groupWorkList(groupWorkParams).getData();
     for (WorkStatistics workStatistics : workStatisticsList) {
       if (workStatistics.getUserId() == userId && workStatistics.getSubmitStatus().equals("1")) {
         // 获取习题的占比
@@ -177,9 +202,11 @@ public class ScoreServiceImpl implements ScoreService {
     return score;
   }
 
-  private double getExaminationScore(int userId, List<WorkStatistics> workStatisticsList) {
+  private double getExaminationScore(int userId, List<WorkStatistics> workStatisticsList, int teachingOutlineId) {
     double score = 0;
-    List<Examination> examinationList = (List<Examination>) examinationService.groupWorkList(new GroupWorkParams()).getData();
+    GroupWorkParams groupWorkParams = new GroupWorkParams();
+    groupWorkParams.setTeachingOutlineId(teachingOutlineId);
+    List<Examination> examinationList = (List<Examination>) examinationService.groupWorkList(groupWorkParams).getData();
     for (WorkStatistics workStatistics : workStatisticsList) {
       if (workStatistics.getUserId() == userId && workStatistics.getSubmitStatus().equals("1")) {
         // 获取考试的占比
