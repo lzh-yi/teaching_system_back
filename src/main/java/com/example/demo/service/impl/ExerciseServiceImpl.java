@@ -36,6 +36,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
   @Override
   public Result exerciseList(ExerciseParams exerciseParams) {
+    System.out.println(exerciseParams);
     // 获取分页对象
     PageParams pageParams = new PageParams(exerciseParams.getPage(), exerciseParams.getPageSize());
     Page<Exercise> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
