@@ -117,15 +117,16 @@ public class ScoreServiceImpl implements ScoreService {
     GroupWorkParams groupWorkParams = new GroupWorkParams();
     groupWorkParams.setTeachingOutlineId(scoreParams.getTeachingOutlineId());
     List<GroupWork> groupWorkList = (List<GroupWork>) groupWorkService.groupWorkList(groupWorkParams).getData();
+    List<Examination> examinationList = (List<Examination>) examinationService.groupWorkList(groupWorkParams).getData();
     for (GroupWork groupWork : groupWorkList) {
       for (WorkStatistics workStatistics : workStatisticsListCopy) {
         if (workStatistics.getWorkId() != groupWork.getId()) continue;
         workStatisticsList.add(workStatistics);
       }
     }
-    for (GroupWork groupWork : groupWorkList) {
+    for (Examination examination : examinationList) {
       for (WorkStatistics workStatistics : examinationStatisticsListCopy) {
-        if (workStatistics.getWorkId() != groupWork.getId()) continue;
+        if (workStatistics.getWorkId() != examination.getId()) continue;
         examinationStatisticsList.add(workStatistics);
       }
     }
